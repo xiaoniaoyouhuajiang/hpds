@@ -16,7 +16,12 @@ benchmark
 
 ## data structure hierachy
 
-## benchmark
+## problem and benchmark
 
+List relative problem
+
+1.[stand for Dask's central task scheduler](https://blog.dask.org/2017/11/03/data-structure-benchmark)
+
+creates three data structures that index each other with dictionaries, lists, and sets, and then does some simple arithmetic
 
 
