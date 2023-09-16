@@ -3,7 +3,7 @@ and numpy distutils documentations for more info:
 http://docs.scipy.org/doc/numpy/reference/distutils.html
 """
 # Author: Gael Varoquaux
-# License: BSD 3 clause
+# License: BSD
 
 import numpy
 from Cython.Distutils import build_ext

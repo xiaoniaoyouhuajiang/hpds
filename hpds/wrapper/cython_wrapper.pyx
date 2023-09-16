@@ -6,11 +6,11 @@ http://cython.org for more information
 """
 
 # Author: Gael Varoquaux
-# License: BSD 3 clause
+# License: BSD
 
 # Declare the prototype of the C function we are interested in calling
 cdef extern from "c_code.c":
-    float *compute(int size)
+    int *compute(int size)
 
 from libc.stdlib cimport free
 from cpython cimport PyObject, Py_INCREF
@@ -31,8 +31,9 @@ np.import_array()
 cdef class ArrayWrapper:
     cdef void* data_ptr
     cdef int size
+    cdef int typenum
 
-    cdef set_data(self, int size, void* data_ptr):
+    cdef set_data(self, int size, void* data_ptr, int typenum):
         """ Set the data of the array
         This cannot be done in the constructor as it must recieve C-level
         arguments.
@@ -41,10 +42,13 @@ cdef class ArrayWrapper:
         size: int
             Length of the array.
         data_ptr: void*
-            Pointer to the data            
+            Pointer to the data.
+        typenum: int
+            Data type of the array.
         """
         self.data_ptr = data_ptr
         self.size = size
+        self.typenum = typenum
 
     def __array__(self):
         """ Here we use the __array__ method, that is called when numpy
@@ -52,8 +56,9 @@ cdef class ArrayWrapper:
         cdef np.npy_intp shape[1]
         shape[0] = <np.npy_intp> self.size
         # Create a 1D array, of length 'size'
-        ndarray = np.PyArray_SimpleNewFromData(1, shape,
-                                               np.NPY_INT, self.data_ptr)
+        ndarray = np.PyArray_SimpleNewFromData(1, shape, self.typenum,
+                                               self.data_ptr)
+        np.set_array_base(ndarray, self)
         return ndarray
 
     def __dealloc__(self):
@@ -61,24 +66,17 @@ cdef class ArrayWrapper:
         references to the object are gone. """
         free(<void*>self.data_ptr)
 
+cdef wrap_int(int size, int* data):
+    cdef ArrayWrapper obj = ArrayWrapper()
+    obj.set_data(size, <void*>data, np.NPY_INT)
+    return np.array(obj, copy=False)
 
 def py_compute(int size):
     """ Python binding of the 'compute' function in 'c_code.c' that does
         not copy the data allocated in C.
     """
-    cdef float *array
-    cdef np.ndarray ndarray
+    cdef int *array
     # Call the C function
     array = compute(size)
 
-    array_wrapper = ArrayWrapper()
-    array_wrapper.set_data(size, <void*> array) 
-    ndarray = np.array(array_wrapper, copy=False)
-    # Assign our object to the 'base' of the ndarray object
-    ndarray.base = <PyObject*> array_wrapper
-    # Increment the reference count, as the above assignement was done in
-    # C, and Python does not know that there is this additional reference
-    Py_INCREF(array_wrapper)
-
-
-    return ndarray
+    return wrap_int(size, array)
