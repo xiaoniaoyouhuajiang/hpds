@@ -18,6 +18,12 @@ benchmark
 
 ```
 
+## prerequisites
+
+* cuda
+* cudnn
+
+
 ## data structure hierachy
 
 ## problem and benchmark

@@ -1,7 +1,3 @@
-""" Script to smoke-test our Cython wrappers
-"""
-# Author: Gael Varoquaux
-# License: BSD 3 clause
 import numpy as np
 
 import cython_wrapper
