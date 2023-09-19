@@ -1,1 +1,1 @@
-from . import pargsort
+from .argsort import pargsort

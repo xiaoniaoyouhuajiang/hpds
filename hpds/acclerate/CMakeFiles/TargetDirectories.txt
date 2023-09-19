@@ -1,3 +1,0 @@
-/home/xiao-sa/software/hpds/hpds/acclerate/CMakeFiles/multiply.dir
-/home/xiao-sa/software/hpds/hpds/acclerate/CMakeFiles/edit_cache.dir
-/home/xiao-sa/software/hpds/hpds/acclerate/CMakeFiles/rebuild_cache.dir

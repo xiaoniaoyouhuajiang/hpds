@@ -12,8 +12,14 @@ ext_modules = [
         include_dirs=[numpy.get_include()]
     )
 ]
-
+"""
 setup(
     name="pargsort",
     ext_modules=cythonize(ext_modules, compiler_directives={"language_level": "3"}),
+)
+"""
+
+setup(
+    name="pargsort",
+    ext_modules=ext_modules,
 )
