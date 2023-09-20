@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/setup.py",
             "console": "integratedTerminal",
-            "justMyCode": true,
+            "justMyCode": false,
             "args": ["develop"],
             "sudo": true
         }
